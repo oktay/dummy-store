@@ -1,26 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container mx-auto px-4">
+    <Header />
+    <Spinner v-if="!products.length" />
+    <div class="product-list my-8 grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <ProductCard v-for="product in products" :product="product" :key="product.id" />
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapState } from 'vuex'
+import Header from './components/Header.vue'
+import Spinner from './components/Spinner.vue'
+import ProductCard from './components/ProductCard.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    Spinner,
+    ProductCard
+  },
+  computed: {
+    ...mapState({
+      products: state => state.products,
+    })
+  },
+  created () {
+    this.$store.dispatch('fetchProducts')
   }
 }
 </script>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
